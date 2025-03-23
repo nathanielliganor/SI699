@@ -7,10 +7,15 @@ model = YOLO("yolov8m-pose.pt")
 
 # Define your video source and striker ID
 video_path = "soccer_clips/right_goal/right_angle/Copy of R.mp4"
-striker_id = 3  # Replace with actual ID of the striker
+striker_id = 3 
 
 # Run tracking with streaming
-results = model.track(source=video_path, stream=True, show=True)
+results = model.track(
+    source=video_path,
+    show=True,           # Show the video while processing
+    save=True,           # Save the annotated video
+    persist=True         # Keep track_ids consistent
+)
 
 pose_data = []
 frame_num = 0
