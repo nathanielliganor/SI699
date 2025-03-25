@@ -2,6 +2,10 @@ import cv2
 import os
 from ultralytics import YOLO
 
+
+# Trained to detect only kicker. Outputs frames for each clip run through pose estimation.
+# Inconsistent bounding box around kicker
+
 # === CONFIG ===
 kicker_model_path = "runs/detect/kicker-detector-v2/weights/best.pt"  # Your trained kicker detector
 pose_model_path = "yolov8m-pose.pt"  # Pretrained pose model

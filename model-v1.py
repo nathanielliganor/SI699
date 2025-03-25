@@ -1,5 +1,9 @@
 from ultralytics import YOLO
 
+
+# Initial build with trained kicker detection. Does not include pose estimation only bounding box.
+
+
 # === CONFIGURATION ===
 model_path = "runs/detect/kicker-detector-v2/weights/best.pt"  # Path to your trained model
 video_path = "soccer_clips/right_goal/right_angle/Copy of R(42).mp4"  # Path to the video you want to test

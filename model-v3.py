@@ -3,6 +3,12 @@ import os
 from ultralytics import YOLO
 from collections import defaultdict
 
+
+# Trained to detect only kicker. Outputs frames for each clip run through pose estimation.
+# Uses Exponential Moving Average and increased padding for more accurate bounding box on kicker
+# Trained with only right angle labels, but works pretty accurately on left angle clips
+
+
 # === CONFIG ===
 kicker_model_path = "runs/detect/kicker-detector-v2/weights/best.pt"
 pose_model_path = "yolov8m-pose.pt"
