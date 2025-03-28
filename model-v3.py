@@ -12,8 +12,8 @@ from collections import defaultdict
 # === CONFIG ===
 kicker_model_path = "runs/detect/kicker-detector-v2/weights/best.pt"
 pose_model_path = "yolov8m-pose.pt"
-video_path = "soccer_clips/right_goal/right_angle/Copy of R(12).mp4"
-output_dir = "pose_output_smoothed"
+video_path = "soccer_clips/right_goal/right_angle/Copy of R(6).mp4"
+output_dir = "pose_output_frames"
 os.makedirs(output_dir, exist_ok=True)
 
 # Smoothing factor (between 0 and 1)
