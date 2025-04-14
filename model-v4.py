@@ -5,12 +5,12 @@ from ultralytics import YOLO
 from collections import defaultdict
 
 # === CONFIG ===
-kicker_model_path = "runs/detect/kicker-detector-v2/weights/best.pt"
+kicker_model_path = "runs/detect/train2/weights/best.pt"
 pose_model_path = "yolov8m-pose.pt"
-video_folder = "soccer_clips/left_goal/right_angle"  # Folder containing the videos
+video_folder = "Final_Data_Folder/Center_Direction/All Angles"  # Folder containing the videos
 
 # Output path
-output_folder = "pose_data/right_goal/left_test"
+output_folder = "pose_data/center_goal/final_test"
 os.makedirs(output_folder, exist_ok=True)
 
 output_csv = os.path.join(output_folder, "kicker_pose_keypoints.csv")
@@ -73,6 +73,10 @@ for video_id, video_file in enumerate(video_files, start=1):
                 # Crop the kicker
                 kicker_crop = frame[y1_s:y2_s, x1_s:x2_s]
 
+                # ✅ Skip invalid crops
+                if kicker_crop.shape[0] == 0 or kicker_crop.shape[1] == 0:
+                    continue
+
                 # Run pose estimation
                 pose_results = pose_model.predict(kicker_crop, show=False)
 
@@ -91,3 +95,4 @@ columns = ["frame", "track_id", "video_id"] + [f"kp_{i}_{axis}" for i in range(1
 df = pd.DataFrame(pose_data, columns=columns)
 df.to_csv(output_csv, index=False)
 print(f"Keypoints saved to: {output_csv}")
+
