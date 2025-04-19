@@ -10,6 +10,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.utils.class_weight import compute_class_weight
 from imblearn.over_sampling import SMOTE
 from sklearn.utils import resample
+import matplotlib.pyplot as plt
 
 
 # Paths to both CSV files
@@ -87,7 +88,29 @@ print(pd.Series(side_labels_raw).value_counts())
 # )
 # class_weight_dict = dict(enumerate(class_weights))
 # print("Class Weights:", class_weight_dict)
+def plot_history(history, fold):
+    plt.figure(figsize=(12, 5))
 
+    # Accuracy
+    plt.subplot(1, 2, 1)
+    plt.plot(history.history['accuracy'], label='Train Accuracy')
+    plt.plot(history.history['val_accuracy'], label='Val Accuracy')
+    plt.title(f'Fold {fold+1} Accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+
+    # Loss
+    plt.subplot(1, 2, 2)
+    plt.plot(history.history['loss'], label='Train Loss')
+    plt.plot(history.history['val_loss'], label='Val Loss')
+    plt.title(f'Fold {fold+1} Loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+
+    plt.tight_layout()
+    plt.show()
 
 # === Cross-validation ===
 def create_model(input_shape):
@@ -158,7 +181,14 @@ for fold, (train_idx, val_idx) in enumerate(kfold.split(X, side_labels_raw)):
 
     # === Model training ===
     model = create_model((NUM_FRAMES, X.shape[2]))
-    model.fit(X_train_resampled, y_train, epochs=50, batch_size=32, verbose=1)
+    # model.fit(X_train_resampled, y_train, epochs=50, batch_size=32, verbose=1)
+    history = model.fit(
+        X_train_resampled, y_train,
+        epochs=50,
+        batch_size=16,
+        verbose=1,
+        validation_data=(balanced_X_val, y_val_resampled)
+    )
 
     preds = model.predict(balanced_X_val)
     preds_classes = np.argmax(preds, axis=1)
@@ -174,5 +204,7 @@ for fold, (train_idx, val_idx) in enumerate(kfold.split(X, side_labels_raw)):
     print(classification_report(val_true, preds_classes, target_names=["middle", "left", "right"]))
 
     accuracies.append(acc)
+
+
 
 print(f"\nAverage Accuracy over {kfold.get_n_splits()} folds: {np.mean(accuracies):.4f}")
